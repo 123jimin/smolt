@@ -48,4 +48,12 @@ describe("parse", function() {
         assert.strictEqual(parse("{{foo}}")({foo: "Hello, world!"}), "Hello, world!");
         assert.strictEqual(parse("{{bar}}")({foo: 1, bar: 2}), "2");
     });
+
+    it("should able to handle multiple elif chains", function() {
+        const v = parse("{{#if foo == 1}}ONE{{#elif foo == 2}}TWO{{#elif foo == 3}}THREE{{#else}}FOUR{{#endif}}");
+        assert.strictEqual(v({foo: 1}), 'ONE');
+        assert.strictEqual(v({foo: 2}), 'TWO');
+        assert.strictEqual(v({foo: 3}), 'THREE');
+        assert.strictEqual(v({foo: 4}), 'FOUR');
+    });
 });
