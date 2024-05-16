@@ -1,7 +1,7 @@
 {
-  "name": "placeholder-name",
+  "name": "smolt",
   "version": "0.0.1",
-  "description": "placeholder-description",
+  "description": "A smol and simple JavaScript template engine for personal projects.",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,26 +10,24 @@
     "prepare": "npm run build",
     "build": "npx tsc",
     "watch": "npx tsc --watch",
-    "lint": "npx eslint src/",
     "test": "npx mocha"
   },
   "keywords": [],
-  "author": "placeholder-author",
-  "license": "UNLICENSED",
+  "author": "Jimin Park",
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.invalid/placeholder/placeholder.git"
+    "url": "git+https://github.com/123jimin/smolt.git"
   },
   "bugs": {
-    "url": "https://github.invalid/placeholder/placeholder/issues"
+    "url": "https://github.com/123jimin/smolt/issues"
   },
-  "homepage": "https://github.invalid/placeholder/placeholder",
+  "homepage": "https://github.com/123jimin/smolt",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^6.14.0",
-    "@typescript-eslint/parser": "^6.14.0",
-    "chai": "^4.3.10",
-    "eslint": "^8.56.0",
-    "mocha": "^10.2.0",
-    "typescript": "^5.3.3"
+    "@typescript-eslint/eslint-plugin": "^7.9.0",
+    "@typescript-eslint/parser": "^7.9.0",
+    "chai": "^5.1.1",
+    "mocha": "^10.4.0",
+    "typescript": "^5.4.5"
   }
 }
