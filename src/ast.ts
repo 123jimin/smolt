@@ -145,6 +145,10 @@ export function makeAST(tokens: string[]): SmoltAST {
                 statements = popped_statements;
                 break;
             }
+            case '//':
+                // To remove a line consisting of only a command...
+                statements.push({type: 'expr', value: "null"});
+                break;
             default: {
                 throw new Error(`Unknown command: \`${token.slice(2)}\`!`);
             }
@@ -164,7 +168,7 @@ export function astToSource(ast: SmoltAST): string {
     }
 
     const SRC_INIT = `let W;{W=[${astToSourceInner(ast, false)}].flat()}`;
-    const SRC_BUILD = `let S=[],f=!1,n=!1;for(let w of W){if(w!=null){if(f&&n&&w[0]==='\\n')w=w.slice(1);S.push(w);f=w[w.length-1]==='\\n'}n=w==null}`;
+    const SRC_BUILD = `let S=[],f=!0,g,n=!1;for(let w of W){if(w!=null){g=w[w.length-1]==='\\n';if(f&&n&&w[0]==='\\n')w=w.slice(1);S.push(w);f=g}n=w==null}`;
     return `((ctx={})=>{\n${SRC_INIT}\n${SRC_BUILD}\nreturn S.join('')})`;
 }
 

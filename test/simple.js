@@ -27,7 +27,10 @@ describe("tokenize", function() {
 
 describe("makeTemplate", function() {
     it("should be able to handle the example", function() {
-        assert.strictEqual(makeTemplate("Hello, {{toUpper(name)}}!")({name: "Smith", toUpper: (name) => name.toUpperCase()}), "Hello, SMITH!")
+        const t = makeTemplate("{{#if name}}Hello, {{toUpper(name)}}!{{#else}}Who are you?{{#endif}}");
+        assert.strictEqual(t({name: "Smith", toUpper: (name) => name.toUpperCase()}), "Hello, SMITH!");
+        assert.strictEqual(t(), "Who are you?");
+        assert.strictEqual(`${t}`, "Who are you?");
     });
 
     it("should leave simple strings unchanged", function() {
@@ -59,11 +62,18 @@ describe("makeTemplate", function() {
         assert.strictEqual(makeTemplate(`{{asdf + "asdf\\"asdf" + asdf}}`)({asdf: 'foo'}), "fooasdf\"asdffoo");
     });
 
+    it("should handle comments", function() {
+        assert.strictEqual(makeTemplate("{{// Hello, world!}}")(), "");
+        assert.strictEqual(makeTemplate("The quick brown\n{{// Hello, world!}}\nfox jumps over\n{{// Hi!}}the lazy dog.")(), "The quick brown\nfox jumps over\nthe lazy dog.");
+    })
+
     it("should remove a null line", function() {
         assert.strictEqual(makeTemplate(`Hello\n{{= ""}}\nworld!`)(), "Hello\n\nworld!");
         assert.strictEqual(makeTemplate(`Hello\n{{= null}}\nworld!`)(), "Hello\nworld!");
         assert.strictEqual(makeTemplate(`He{{bar}}\n{{= null}}llo\n{{foo}}{{= null}}{{bar}}\nworl{{foo}}d!`)({foo: null, bar: (void 0)}), "He\nllo\nworld!");
         assert.strictEqual(makeTemplate(`Hello\n{{= null}} {{= null}}\nworld!`)(), "Hello\n \nworld!");
+
+        assert.strictEqual(makeTemplate(`Hello,\n{{null}}{{undefined}}\n{{// uwu}}\n{{= false}}\nworld!`)(), "Hello,\nfalse\nworld!");
     });
 
     it("should be able to handle multiple elif chains", function() {
@@ -72,5 +82,11 @@ describe("makeTemplate", function() {
         assert.strictEqual(v({foo: 2}), 'TWO');
         assert.strictEqual(v({foo: 3}), 'THREE');
         assert.strictEqual(v({foo: 4}), 'FOUR');
+    });
+
+    describe("toString", function() {
+        it("should return the templated string with no context", function() {
+            assert.strictEqual(makeTemplate("Hello, world!").toString(), "Hello, world!");
+        });
     });
 });
