@@ -7,8 +7,9 @@ export type SmoltAST = SmoltStatement|SmoltBlock;
 
 const REGEX_KEYWORD_ONLY = /^(true|false|null|undefined)$/;
 
-const REGEX_SRC_IDENTIFIER = `[A-Za-z_$][A-Za-z0-9_$]*`;
-const REGEX_SRC_VALUE = `${REGEX_SRC_IDENTIFIER}(\\s*\\.\\s*${REGEX_SRC_IDENTIFIER})*`;
+const REGEX_SRC_IDENTIFIER_BODY = `[A-Za-z0-9_$]`;
+const REGEX_SRC_IDENTIFIER = `[A-Za-z_$]${REGEX_SRC_IDENTIFIER_BODY}*`;
+const REGEX_SRC_VALUE = `(?<!\\.\\s*)(?<!${REGEX_SRC_IDENTIFIER_BODY})${REGEX_SRC_IDENTIFIER}(\\s*\\.\\s*${REGEX_SRC_IDENTIFIER})*`;
 const REGEX_VALUE = new RegExp(`${REGEX_SRC_VALUE}`, 'g');
 const REGEX_VALUE_ONLY = new RegExp(`^${REGEX_SRC_VALUE}$`);
 

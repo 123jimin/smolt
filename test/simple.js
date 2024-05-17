@@ -47,11 +47,24 @@ describe("makeTemplate", function() {
         checkSimple("The quick \n //brown fox jumps\t\nover  {  the\nlazy }># dog.");
     });
 
-    it("should be able to substitute variables", function() {
+    it("should be able to substitute simple variables", function() {
         assert.strictEqual(makeTemplate("{{foo}}")({foo: "Hello, world!"}), "Hello, world!");
         assert.strictEqual(makeTemplate("{{bar}}")({foo: 1, bar: 2}), "2");
         assert.strictEqual(makeTemplate("{{foo}} + {{bar}} = {{foo + bar}}")({foo: 1, bar: 2}), "1 + 2 = 3");
+    });
+
+    it("shoulod be able to substitute more complex variables", function() {
         assert.strictEqual(makeTemplate("{{$foo}}, {{foo.bar}}, {{_baz[0]}}, {{$x[1]}}")({$foo: 1, foo: {bar: 2}, _baz: [3], $x: [5, 4, 3, 2, 1]}), "1, 2, 3, 4");
+    });
+
+    it("should not substitute certain identifier-like strings", function() {
+        assert.strictEqual(makeTemplate("{{foo.bar[0].baz}}")({foo: {bar: [{baz: "Hello, world!"}]}}), "Hello, world!");
+        assert.strictEqual(makeTemplate("{{foo[0].bar}}")({foo: [{bar: "Hello, world!"}]}), "Hello, world!");
+        assert.strictEqual(makeTemplate("{{42e7}}")(), `${42e7}`);
+    });
+
+    it("should not substitute already-substituted variables", function() {
+        assert.strictEqual(makeTemplate("{{foo}}")({foo: "{{bar}}", bar: "NOPE"}), "{{bar}}");
     });
 
     it("should not substitute keywords", function() {
