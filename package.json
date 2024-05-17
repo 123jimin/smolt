@@ -1,5 +1,5 @@
 {
-  "name": "smolt",
+  "name": "@jiminp/smolt",
   "version": "0.1.0",
   "description": "A smol and simple JavaScript template engine for personal projects.",
   "type": "module",
