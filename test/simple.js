@@ -51,6 +51,7 @@ describe("makeTemplate", function() {
         assert.strictEqual(makeTemplate("{{foo}}")({foo: "Hello, world!"}), "Hello, world!");
         assert.strictEqual(makeTemplate("{{bar}}")({foo: 1, bar: 2}), "2");
         assert.strictEqual(makeTemplate("{{foo}} + {{bar}} = {{foo + bar}}")({foo: 1, bar: 2}), "1 + 2 = 3");
+        assert.strictEqual(makeTemplate("{{$foo}}, {{foo.bar}}, {{_baz[0]}}, {{$x[1]}}")({$foo: 1, foo: {bar: 2}, _baz: [3], $x: [5, 4, 3, 2, 1]}), "1, 2, 3, 4");
     });
 
     it("should not substitute keywords", function() {
