@@ -1,5 +1,7 @@
 # smolt
 
+[![NPM Version](https://img.shields.io/npm/v/%40jiminp%2Fsmolt)](https://www.npmjs.com/package/@jiminp/smolt) ![GitHub License](https://img.shields.io/github/license/123jimin/smolt)
+
 smolt is a smol and simple JavaScript template engine.
 
 smolt aims to achieve smol code size.
@@ -7,6 +9,12 @@ smolt aims to achieve smol code size.
 **smolt has smol security, as smolt uses `eval` for compiling templates!**
 
 smolt is only suitable for smol JavaScript projects where all templates can be trusted.
+
+## Installation
+
+```sh
+npm install @jiminp/smolt
+```
 
 ## Usage
 
