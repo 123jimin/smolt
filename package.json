@@ -1,6 +1,6 @@
 {
   "name": "@jiminp/smolt",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A smol and simple JavaScript template engine for personal projects.",
   "type": "module",
   "main": "dist/index.js",
