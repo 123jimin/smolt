@@ -1,12 +1,16 @@
 import {tokenize} from "./tokenizer.js";
-import {makeAST, compileAST, type SmoltAST} from "./ast.js";
+import {makeAST, astToSource} from "./ast.js";
 
-type SmoltTemplate = (args: Record<string, unknown>) => string;
+type SmoltTemplate = (args?: Record<string, unknown>) => string;
 
-export function parse(template_src: string): SmoltTemplate {
+export function toTemplateSrc(template_src: string): string {
     const tokens = tokenize(template_src);
     const ast = makeAST(tokens);
-    const src = compileAST(ast);
-    
-    return eval(src);
+    const src = astToSource(ast);
+
+    return src;
+}
+
+export function makeTemplate(template_src: string): SmoltTemplate { 
+    return eval(toTemplateSrc(template_src));
 }
