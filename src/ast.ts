@@ -4,6 +4,7 @@ export type SmoltBranch = {type: 'branch'; branches: Array<{condition: string|nu
 export type SmoltStatement = SmoltLiteral|SmoltExpression|SmoltBranch;
 export type SmoltBlock = {type: 'block'; statements: Array<SmoltStatement>;};
 export type SmoltAST = SmoltStatement|SmoltBlock;
+export type SmoltTemplate = (args?: Record<string, unknown>) => string;
 
 const REGEX_KEYWORD_ONLY = /^(true|false|null|undefined)$/;
 
@@ -193,5 +194,31 @@ function astToSourceInner(ast: SmoltAST, need_bracket: boolean = true): string {
             }).join(':')})`;
         }
         default: return ast;
+    }
+}
+
+export type EvalFunction = (ctx: Record<string, unknown>, s: string) => unknown;
+
+export function astToFunction(ast: SmoltAST, evalFunction: EvalFunction): SmoltTemplate {
+    switch(ast.type) {
+        case 'literal': {
+            return () => ast.value;
+        }
+        case 'expr': {
+            return (ctx={}) => evalFunction(ctx, ast.value) as string;
+        }
+        case 'block': {
+            return (ctx={}) => ast.statements.map((statement) => astToFunction(statement, evalFunction)(ctx)).join('');
+        }
+        case 'branch': {
+            return (ctx={}) => {
+                for(const {condition, body} of ast.branches) {
+                    if(condition == null || evalFunction(ctx, condition)) {
+                        return astToFunction(body, evalFunction)(ctx);
+                    }
+                }
+                return '';
+            };
+        }
     }
 }

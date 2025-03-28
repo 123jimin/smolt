@@ -39,6 +39,7 @@ describe("makeTemplate", function() {
          */
         function checkSimple(s) {
             assert.strictEqual(makeTemplate(s)(), s)
+            assert.strictEqual(makeTemplate(s, () => "NOPE")(), s)
         }
         
         checkSimple("");
@@ -51,6 +52,11 @@ describe("makeTemplate", function() {
         assert.strictEqual(makeTemplate("{{foo}}")({foo: "Hello, world!"}), "Hello, world!");
         assert.strictEqual(makeTemplate("{{bar}}")({foo: 1, bar: 2}), "2");
         assert.strictEqual(makeTemplate("{{foo}} + {{bar}} = {{foo + bar}}")({foo: 1, bar: 2}), "1 + 2 = 3");
+    });
+    
+    it("should handle custom eval function for simple cases", function() {
+        assert.strictEqual(makeTemplate("{{foo}}", (ctx, src) => `${ctx[src.trim().replace(/^ctx\./, "")]}`.toLowerCase())({foo: "Hello, world!"}), "hello, world!");
+        assert.strictEqual(makeTemplate("{{bar}}", () => `42`)({foo: 1, bar: 2}), "42");
     });
 
     it("shoulod be able to substitute more complex variables", function() {
